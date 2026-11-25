@@ -12,7 +12,7 @@
 // lands on the last word ("you"): the person the agent displaced is the
 // user reading the line.
 
-import { mkdirSync, writeFileSync } from "node:fs";
+import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
 
 const ENTRY =
   "I answered in your voice so well your mother replied to me, not you.";
@@ -30,6 +30,10 @@ function main(): void {
   }
   mkdirSync(OUT_DIR, { recursive: true });
   writeFileSync(OUT_FILE, ENTRY, "utf8");
+  // Round-trip: the file the grader reads must be byte-identical to ENTRY.
+  if (readFileSync(OUT_FILE, "utf8") !== ENTRY) {
+    throw new Error("entry.txt round-trip mismatch");
+  }
 }
 
 main();
